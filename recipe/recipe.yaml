@@ -22,7 +22,7 @@ build:
     - echo "=== all libc.so ==="; find $BUILD_PREFIX -name "libc.so*" -exec sh -c 'echo "--- $1"; file "$1"' _ {} \; || true
     - echo "=== env ==="; env | grep -iE 'CC|LD|LIBRARY|SYSROOT|CONDA' | sort || true
     - cabal update
-    - cabal configure --disable-shared --disable-executable-dynamic --ghc-options="-optl--sysroot=$CONDA_BUILD_SYSROOT"
+    - cabal configure --disable-shared --disable-executable-dynamic --disable-library-for-ghci --ghc-options="-optl--sysroot=$CONDA_BUILD_SYSROOT"
     - cabal build exe:shellcheck
     - cabal install exe:shellcheck --installdir=$PREFIX/bin --install-method=copy
 
