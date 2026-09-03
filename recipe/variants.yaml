@@ -1,4 +1,0 @@
-c_compiler:
-  - gcc
-c_stdlib:
-  - sysroot
