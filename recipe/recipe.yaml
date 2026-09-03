@@ -1,0 +1,42 @@
+context:
+  version: "0.11.0"
+
+package:
+  name: shellcheck
+  version: ${{ version }}
+
+source:
+  url: https://github.com/koalaman/shellcheck/archive/refs/tags/v${{ version }}.tar.gz
+  sha256: 8b07554f92e4fbfc33f1539a1f475f21c6503ceae8f806efcc518b1f529f7102
+
+build:
+  number: 0
+  skip: win
+  dynamic_linking:
+    overlinking_behavior: error
+    overdepending_behavior: error
+  script:
+    - cabal update
+    - cabal build exe:shellcheck
+    - cabal install exe:shellcheck --installdir=$PREFIX/bin --install-method=copy
+
+requirements:
+  build:
+    - ghc
+    - cabal
+  run: []
+
+tests:
+  - script:
+      - shellcheck --version
+
+about:
+  homepage: https://www.shellcheck.net/
+  summary: ShellCheck, a static analysis tool for shell scripts
+  license: GPL-3.0-or-later
+  license_file: LICENSE
+  repository: https://github.com/koalaman/shellcheck
+
+extra:
+  recipe-maintainers:
+    - black-desk
