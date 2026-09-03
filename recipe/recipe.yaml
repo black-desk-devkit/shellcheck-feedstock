@@ -16,15 +16,10 @@ build:
     overlinking_behavior: error
     overdepending_behavior: error
   script:
-    - set -x
-    - echo "=== /lib64 ==="; ls -la /lib64/ || true
-    - echo "=== ldconfig libc ==="; ldconfig -p | grep libc.so || true
-    - echo "=== GHC settings ==="; find $BUILD_PREFIX -name "settings" -path "*ghc*" -exec cat {} \; || true
-    - echo "=== all libc.so ==="; find $BUILD_PREFIX -name "libc.so*" -exec sh -c 'echo "--- $1"; file "$1"' _ {} \; || true
-    - echo "=== env ==="; env | grep -iE 'CC|LD|LIBRARY|SYSROOT|CONDA' | sort || true
+    - sed -i -e "s|/lib64/|$CONDA_BUILD_SYSROOT/lib64/|g" -e "s|/usr/lib64/|$CONDA_BUILD_SYSROOT/usr/lib64/|g" "$CONDA_BUILD_SYSROOT/lib64/libc.so"
     - cabal update
     - cabal configure --disable-shared --disable-executable-dynamic --disable-library-for-ghci --ghc-options="-optl--sysroot=$CONDA_BUILD_SYSROOT"
-    - cabal build -v3 exe:shellcheck
+    - cabal build exe:shellcheck
     - cabal install exe:shellcheck --installdir=$PREFIX/bin --install-method=copy
 
 requirements:
