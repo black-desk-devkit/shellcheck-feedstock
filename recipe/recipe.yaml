@@ -17,6 +17,7 @@ build:
     overdepending_behavior: error
   script:
     - cabal update
+    - cabal configure --disable-shared --disable-executable-dynamic
     - cabal build exe:shellcheck
     - cabal install exe:shellcheck --installdir=$PREFIX/bin --install-method=copy
 
