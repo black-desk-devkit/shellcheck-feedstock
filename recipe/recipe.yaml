@@ -16,6 +16,11 @@ build:
     overlinking_behavior: error
     overdepending_behavior: error
   script:
+    - echo "=== /lib64 ==="; ls -la /lib64/ || true
+    - echo "=== ldconfig libc ==="; ldconfig -p | grep libc.so || true
+    - echo "=== GHC settings ==="; find $BUILD_PREFIX -name "settings" -path "*ghc*" -exec cat {} \; || true
+    - echo "=== all libc.so ==="; find $BUILD_PREFIX -name "libc.so*" -exec sh -c 'echo "--- $1"; file "$1"' _ {} \; || true
+    - echo "=== env ==="; env | grep -iE 'CC|LD|LIBRARY|SYSROOT|CONDA' | sort || true
     - cabal update
     - cabal configure --disable-shared --disable-executable-dynamic
     - cabal build exe:shellcheck
